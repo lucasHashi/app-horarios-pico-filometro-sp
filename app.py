@@ -1,17 +1,12 @@
 import streamlit as st
 import streamlit.components.v1 as components
-
-import pandas as pd
-import plotly.graph_objs as go
+import PIL
 
 import carrega_analise_filometro
 
 import os
-import re
 
 CAMINHO_BASE_PROJETO = os.getcwd()
-
-# PAGINA_ATUAL = 'inicio'
 
 def main():
     st.set_page_config(
@@ -29,7 +24,7 @@ def main():
         'Qual é o posto mais vazio na minha região?',
         'Os postos estão ficando sem vacinas?',
         'Mel ou Petit',
-        'Contato'
+        'Quem fez esse app?'
     ])
 
 
@@ -48,20 +43,8 @@ def main():
     elif PAGINA_ATUAL == 'Mel ou Petit':
         carregar_pagina_mel_ou_petit()
     
-    elif PAGINA_ATUAL == 'Contato':
+    elif PAGINA_ATUAL == 'Quem fez esse app?':
         carregar_pagina_contato()
-    
-    # Insert the script in the head tag of the static template inside your virtual environement
-    from bs4 import BeautifulSoup
-    import pathlib2 as pathlib
-
-    index_path = pathlib.Path(st.__file__).parent / "static" / "index.html"
-    soup = BeautifulSoup(index_path.read_text(), features="lxml")
-    if len(re.findall('data-ad-client', index_path.read_text()))==0:
-        soup.head.append(os.environ['magia_MAGIA'])
-        index_path.write_text(str(soup))
-
-    st.write(os.environ['magia_MAGIA'][:20])
 
 
 
@@ -73,6 +56,14 @@ def carregar_pagina_inicial(carrega_analises):
     st.write('### Ultima atualização dos dados: **{}**'.format(data_da_ultima_atualizacao))
 
 
+    st.write('## O que os números dos gráficos significam')
+
+    st.write('As lotações dos postos foram enumeradas como na imagem, os valores dos gráficos são as médias dessas lotações')
+
+    img_descricao = PIL.Image.open(os.path.join(CAMINHO_BASE_PROJETO, 'imagens', 'imagem_descricao_valores.jpg'))
+    st.image(img_descricao)
+
+
 def carregar_pagina_melhor_horario_por_posto(carrega_analises):
     st.title('Qual é o melhor horario para ir no meu posto?')
 
@@ -82,7 +73,7 @@ def carregar_pagina_melhor_horario_por_posto(carrega_analises):
     postos_escolhidos = st.multiselect('Selecione os postos próximos', lista_completa_postos)
 
     if postos_escolhidos:
-        st.write('## Mapa de calor da lotação média por horário')
+        st.write('## Lotação média por horário')
 
         fig_heatmap_media_postos_escolhidos = carrega_analises.carregar_grafico_heatmap_pontuacao_dos_postos_escolhidos(postos_escolhidos)
 
@@ -111,9 +102,16 @@ def carregar_pagina_melhor_posto_por_regiao(carrega_analises):
 
     st.write('## **Melhores 10** postos para o horario das **{}**'.format(horario_escolhido))
 
-    fig_melhores_postos_por_regiao = carrega_analises.carregar_grafico_heatmap_melhores_postos_da_regiao_escolhida(regiao_escolhida, horario_escolhido)
+    fig_melhores_postos_por_regiao = carrega_analises.carregar_grafico_heatmap_melhores_postos_da_regiao_escolhida(10, regiao_escolhida, horario_escolhido)
 
     st.plotly_chart(fig_melhores_postos_por_regiao, True)
+
+
+    st.write('## **Piores 5** postos')
+
+    fig_piores_postos_por_regiao = carrega_analises.carregar_grafico_heatmap_piores_postos_da_regiao_escolhida(5, regiao_escolhida, horario_escolhido)
+
+    st.plotly_chart(fig_piores_postos_por_regiao, True)
 
 def carregar_pagina_falta_de_vacinas(carrega_analises):
     st.title('Os postos estão ficando sem vacinas?')
@@ -143,7 +141,34 @@ def carregar_pagina_mel_ou_petit():
     components.iframe('https://docs.google.com/forms/d/e/1FAIpQLSdy1lI52ubQ0Gs0qcdy-Q-G3h_JtFDBTtLRWHzfQ3mHCHnbiQ/viewform?embedded=true', width=640, height=900)
 
 def carregar_pagina_contato():
-    st.title('Contatos')
+    st.title('Quem fez esse app?')
+
+    img_eu = PIL.Image.open(os.path.join(CAMINHO_BASE_PROJETO, 'imagens', 'eu.jpg'))
+    st.image(img_eu, 'Eu.png')
+
+    st.write('Oi, tudo bem? Sou **Lucas Belmonte**, cientista de dados, pensei que coletar esses dados e disponibilizar com gráficos e tudo mais seria legal')
+    st.write('Espero ter ajudado você a escolher um **melhor horário pra vacinar**')
+    st.write('Meu trabalho em geral é pegar dados e **auxiliar em boas decições**')
+    st.write('Enfim, seguem **links** pra onde mais **me encontrar e encontrar os códigos desse app**')
+
+    st.write('''
+        ### [Linkedin](https://www.linkedin.com/in/lucas-d-belmonte/)\n
+        ### [Instagram](https://www.instagram.com/lucashashi_pk/)\n
+        ### [Insta dos meus cães](https://www.instagram.com/mel_e_petit/)\n
+        ### [Códigos desse app](https://github.com/lucasHashi/app-horarios-pico-filometro-sp)\n
+        ### [Github](https://github.com/lucasHashi)\n
+        ### [Site pessoal](http://www.lucasbelmonte.com.br/)\n
+    ''')
+
+    st.write('## Me ajude com a hospedagem desse site')
+    st.write('Se achou esse site útil, tem alguns trocados que não fariam falta e gostaria de ajudar pra esse site não cair ou falhar muito, considere manda um pix.')
+    st.write('Nesse momento estou custeando o servidor por conta, mas só posso continuar até certo tempo.')
+
+    st.write('Chave aleatória:\n### 0df2925f-1523-4c84-8794-5935354d8f32')
+    img_pix = PIL.Image.open(os.path.join(CAMINHO_BASE_PROJETO, 'imagens', 'pix_c6.png'))
+    st.image(img_pix)
+
+    st.write('Enfim, agora sim acabou, **obrigado por passar por aqui**.')
 
 
 @st.cache
@@ -151,6 +176,7 @@ def iniciar_classe_de_analise():
     carrega_analises = carrega_analise_filometro.carrega_analise_filometro()
 
     return carrega_analises
+
 
 if __name__ == '__main__':
     main()

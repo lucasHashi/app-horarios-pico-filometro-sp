@@ -110,25 +110,12 @@ class carrega_analise_filometro(object):
 
         return df_posto_heatmap
     
-    def _carregar_df_media_pontuacao_por_regiao_escolhida(self, regiao_escolhida, horario_escolhido):
-
-        # Filtra os postos dessa regiao e apenas o horario em questao
-        df_regiao_escolhida = self.df_dados_completo[
-            (self.df_dados_completo['categoria'] == regiao_escolhida) &
-            (self.df_dados_completo['situacao_pontuacao'] >= 0) &
-            (self.df_dados_completo['horario_texto'] == horario_escolhido)
-        ]
-
-        # Calcula a media e pega os 10 melhores
-        top_10_postos = df_regiao_escolhida.groupby(['titulo']).mean()
-        top_10_postos.sort_values('situacao_pontuacao', inplace=True)
-        top_10_postos = top_10_postos.head(10)
-        top_10_postos = top_10_postos.index.get_level_values('titulo')
-        top_10_postos = list(top_10_postos)
+    def _carregar_df_melhores_postos_por_regiao_escolhida(self, quantidade_postos, regiao_escolhida, horario_escolhido):
+        melhores_postos = self._carregar_melhores_postos_por_regiao_e_horario(quantidade_postos, regiao_escolhida, horario_escolhido)
 
         # Filtra os dados completos dos 10 melhores no horario especificado
         df_melhores_postos_da_regiao = self.df_dados_completo[
-            (self.df_dados_completo['titulo'].isin(top_10_postos)) &
+            (self.df_dados_completo['titulo'].isin(melhores_postos)) &
             (self.df_dados_completo['situacao_pontuacao'] >= 0)
         ]
 
@@ -140,6 +127,25 @@ class carrega_analise_filometro(object):
         df_heatmap_melhores_postos_na_regiao = pd.concat([df_melhores_postos_da_regiao, df_posto_escolhido_categoria, df_media_geral])
 
         return df_heatmap_melhores_postos_na_regiao
+    
+    def _carregar_df_piores_postos_por_regiao_escolhida(self, quantidade_postos, regiao_escolhida, horario_escolhido):
+        piores_postos = self._carregar_piores_postos_por_regiao_e_horario(quantidade_postos, regiao_escolhida, horario_escolhido)
+
+        # Filtra os dados completos dos 10 melhores no horario especificado
+        df_piores_postos_da_regiao = self.df_dados_completo[
+            (self.df_dados_completo['titulo'].isin(piores_postos)) &
+            (self.df_dados_completo['situacao_pontuacao'] >= 0)
+        ]
+
+        df_piores_postos_da_regiao = df_piores_postos_da_regiao.groupby(['titulo', 'horario_texto']).mean()
+
+        #df_posto_escolhido_categoria = self._carregar_media_categorias_escolhidas([regiao_escolhida])
+        #df_media_geral = self._carregar_media_geral()
+
+        #df_heatmap_piores_postos_na_regiao = pd.concat([df_piores_postos_da_regiao, df_posto_escolhido_categoria, df_media_geral])
+        df_heatmap_piores_postos_na_regiao = df_piores_postos_da_regiao.copy()
+
+        return df_heatmap_piores_postos_na_regiao
 
 
 
@@ -169,6 +175,40 @@ class carrega_analise_filometro(object):
 
         return df_postos_escolhidos_categoria
     
+    def _carregar_melhores_postos_por_regiao_e_horario(self, quantidade_postos, regiao_escolhida, horario_escolhido):
+        # Filtra os postos dessa regiao e apenas o horario em questao
+        df_regiao_escolhida = self.df_dados_completo[
+            (self.df_dados_completo['categoria'] == regiao_escolhida) &
+            (self.df_dados_completo['situacao_pontuacao'] >= 0) &
+            (self.df_dados_completo['horario_texto'] == horario_escolhido)
+        ]
+
+        # Calcula a media e pega os N melhores
+        melhores_postos = df_regiao_escolhida.groupby(['titulo']).mean()
+        melhores_postos.sort_values('situacao_pontuacao', inplace=True)
+        melhores_postos = melhores_postos.head(quantidade_postos)
+        melhores_postos = melhores_postos.index.get_level_values('titulo')
+        melhores_postos = list(melhores_postos)
+
+        return melhores_postos
+    
+    def _carregar_piores_postos_por_regiao_e_horario(self, quantidade_postos, regiao_escolhida, horario_escolhido):
+        # Filtra os postos dessa regiao e apenas o horario em questao
+        df_regiao_escolhida = self.df_dados_completo[
+            (self.df_dados_completo['categoria'] == regiao_escolhida) &
+            (self.df_dados_completo['situacao_pontuacao'] >= 0) &
+            (self.df_dados_completo['horario_texto'] == horario_escolhido)
+        ]
+
+        # Calcula a media e pega os N melhores
+        piores_postos = df_regiao_escolhida.groupby(['titulo']).mean()
+        piores_postos.sort_values('situacao_pontuacao', inplace=True)
+        piores_postos = piores_postos.tail(quantidade_postos)
+        piores_postos = piores_postos.index.get_level_values('titulo')
+        piores_postos = list(piores_postos)
+
+        return piores_postos
+    
 
 
     def carregar_grafico_heatmap_pontuacao_dos_postos_escolhidos(self, postos_escolhidos):
@@ -193,8 +233,8 @@ class carrega_analise_filometro(object):
         return fig
     
 
-    def carregar_grafico_heatmap_melhores_postos_da_regiao_escolhida(self, regiao_escolhida, horario_escolhido):
-        df_heatmap_melhores_postos_na_regiao = self._carregar_df_media_pontuacao_por_regiao_escolhida(regiao_escolhida, horario_escolhido)
+    def carregar_grafico_heatmap_melhores_postos_da_regiao_escolhida(self, quantidade_postos, regiao_escolhida, horario_escolhido):
+        df_heatmap_melhores_postos_na_regiao = self._carregar_df_melhores_postos_por_regiao_escolhida(quantidade_postos, regiao_escolhida, horario_escolhido)
 
         df_heatmap_melhores_postos_na_regiao.sort_values('situacao_pontuacao', ascending=True)
 
@@ -207,6 +247,29 @@ class carrega_analise_filometro(object):
 
         layout = go.Layout(
             height = 800
+        )
+
+        fig = go.Figure(
+            data = [heatmap_pontuacao_melhores_postos_na_regiao],
+            layout = layout
+        )
+
+        return fig
+
+    def carregar_grafico_heatmap_piores_postos_da_regiao_escolhida(self, quantidade_postos, regiao_escolhida, horario_escolhido):
+        df_heatmap_piores_postos_na_regiao = self._carregar_df_piores_postos_por_regiao_escolhida(quantidade_postos, regiao_escolhida, horario_escolhido)
+
+        df_heatmap_piores_postos_na_regiao.sort_values('situacao_pontuacao', ascending=True)
+
+        heatmap_pontuacao_melhores_postos_na_regiao = go.Heatmap(
+            z = df_heatmap_piores_postos_na_regiao['situacao_pontuacao'],
+            y = df_heatmap_piores_postos_na_regiao.index.get_level_values('titulo'),
+            x = df_heatmap_piores_postos_na_regiao.index.get_level_values('horario_texto'),
+            colorscale = ['#1FA61B', '#F9AE0D', '#E21A1A'], # portland, balance, bluered
+        )
+
+        layout = go.Layout(
+            height = 510
         )
 
         fig = go.Figure(
