@@ -8,7 +8,7 @@ import os
 
 CAMINHO_BASE_PROJETO = os.getcwd()
 
-SOCORRO = True
+SOCORRO = False
 
 def main():
     st.set_page_config(
