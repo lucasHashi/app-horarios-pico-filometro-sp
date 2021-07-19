@@ -14,14 +14,6 @@ CAMINHO_BASE_PROJETO = os.getcwd()
 # PAGINA_ATUAL = 'inicio'
 
 def main():
-    index_file = os.path.dirname(st.__file__)+'/static/index.html'
-    with open(index_file, 'r') as f:
-        data = f.read()
-        if len(re.findall('data-ad-client=', data)) == 0:
-            with open(index_file, 'w') as ff:
-                new_index = re.sub('<head>', '<head>' + os.environ['magia_MAGIA'], data)
-                ff.write(new_index)
-
     st.set_page_config(
         page_title="Horarios de pico - Filometro",
         layout="wide"
@@ -58,6 +50,16 @@ def main():
     
     elif PAGINA_ATUAL == 'Contato':
         carregar_pagina_contato()
+    
+    
+    index_file = os.path.dirname(st.__file__)+'/static/index.html'
+    with open(index_file, 'r') as f:
+        data = f.read()
+        if len(re.findall('data-ad-client=', data)) == 0:
+            with open(index_file, 'w') as ff:
+                new_index = re.sub('<head>', '<head>' + os.environ['magia_MAGIA'], data)
+                ff.write(new_index)
+    st.write(os.environ['magia_MAGIA'])
 
 
 
