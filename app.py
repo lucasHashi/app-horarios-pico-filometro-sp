@@ -10,13 +10,13 @@ CAMINHO_BASE_PROJETO = os.getcwd()
 
 def main():
     st.set_page_config(
-        page_title="Horarios de pico - Filometro",
+        page_title="Horarios de pico - Filômetro",
         layout="wide"
     )
 
     carrega_analises = iniciar_classe_de_analise()
 
-    st.write('# Horarios de pico - Filometro SP')
+    st.write('# Horarios de pico - Filômetro SP')
 
     PAGINA_ATUAL = st.selectbox('Páginas / Perguntas', [
         'Início',
@@ -54,6 +54,12 @@ def carregar_pagina_inicial(carrega_analises):
     data_da_ultima_atualizacao = data_da_ultima_atualizacao.strftime('%d/%m/%Y')
 
     st.write('### Ultima atualização dos dados: **{}**'.format(data_da_ultima_atualizacao))
+
+
+    st.write('## De olho na fila ou Filômetro')
+    st.write('A prefeitura de SP disponibilizou o site "De olho na fila", que atualizar a cada 2 horas a situação da fila em cada posto de vacinação de Covid-19 na cidade.')
+    st.write('[De olho na fila](https://deolhonafila.prefeitura.sp.gov.br/)')
+    st.write('Fui coletando esses dados horários e juntei aqui pra ajudar as pessoas escolherem o posto mais vazio.')
 
 
     st.write('## O que os números dos gráficos significam')
