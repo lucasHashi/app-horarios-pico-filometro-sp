@@ -26,7 +26,7 @@ def main():
         'Início',
         'Qual é o melhor horario para ir no meu posto?',
         'Qual é o posto mais vazio na minha região?',
-        'Os postos estão ficando sem vacina?',
+        'Os postos estão ficando sem vacinas?',
         'Mel ou Petit',
         'Contato'
     ])
@@ -41,7 +41,7 @@ def main():
     elif PAGINA_ATUAL == 'Qual é o posto mais vazio na minha região?':
         carregar_pagina_melhor_posto_por_regiao(carrega_analises)
     
-    elif PAGINA_ATUAL == 'Os postos estão ficando sem vacina?':
+    elif PAGINA_ATUAL == 'Os postos estão ficando sem vacinas?':
         carregar_pagina_falta_de_vacinas(carrega_analises)
     
     elif PAGINA_ATUAL == 'Mel ou Petit':
@@ -103,7 +103,7 @@ def carregar_pagina_melhor_posto_por_regiao(carrega_analises):
     st.plotly_chart(fig_melhores_postos_por_regiao, True)
 
 def carregar_pagina_falta_de_vacinas(carrega_analises):
-    st.title('Os postos estão ficando sem vacina?')
+    st.title('Os postos estão ficando sem vacinas?')
 
     categoria_escolhida = st.selectbox('Minha região', ['drive-thru', 'megaposto', 'posto volante', 'centro', 'leste', 'norte', 'oeste', 'sul'])
 
