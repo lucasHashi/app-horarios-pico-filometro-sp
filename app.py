@@ -8,7 +8,6 @@ import carrega_analise_filometro
 
 import os
 import re
-import settings
 
 CAMINHO_BASE_PROJETO = os.getcwd()
 
@@ -20,7 +19,7 @@ def main():
         data = f.read()
         if len(re.findall('data-ad-client=', data)) == 0:
             with open(index_file, 'w') as ff:
-                new_index = re.sub('<head>', '<head>' + settings.adsense_code, data)
+                new_index = re.sub('<head>', '<head>' + os.environ['magia_MAGIA'], data)
                 ff.write(new_index)
 
     st.set_page_config(
