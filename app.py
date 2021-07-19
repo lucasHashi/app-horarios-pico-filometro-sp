@@ -9,12 +9,18 @@ import os
 CAMINHO_BASE_PROJETO = os.getcwd()
 
 def main():
+    st.title('Oi, então, pequenos problemas com o servidor, desculpe')
+
+    st.write('## Não achei que viriam tantas pessoas, estou arrumando algumas coisas no servidor')
+
+    st.write('Se você tiver umas dicas pra hospedar python no Heroku, ficaria feliz de ouvir: lucashashibelmonte@gmail.com')
+
     st.set_page_config(
         page_title="Horarios de pico - Filômetro",
         layout="wide"
     )
 
-    carrega_analises = iniciar_classe_de_analise()
+    #carrega_analises = iniciar_classe_de_analise()
 
     st.write('# Horarios de pico - Filômetro SP')
 

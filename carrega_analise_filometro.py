@@ -81,7 +81,7 @@ class carrega_analise_filometro(object):
         self.modo_daltonico = modo_daltonico
 
         self.paleta_escolhida = 'alternativa' if modo_daltonico else 'base'
-        
+
 
 
 
