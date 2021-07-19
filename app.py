@@ -51,14 +51,14 @@ def main():
     elif PAGINA_ATUAL == 'Contato':
         carregar_pagina_contato()
     
+    # Insert the script in the head tag of the static template inside your virtual environement
+    from bs4 import BeautifulSoup
     
     index_file = os.path.dirname(st.__file__)+'/static/index.html'
-    with open(index_file, 'r') as f:
-        data = f.read()
-        if len(re.findall('data-ad-client=', data)) == 0:
-            with open(index_file, 'w') as ff:
-                new_index = re.sub('<head>', '<head>' + os.environ['magia_MAGIA'], data)
-                ff.write(new_index)
+    soup = BeautifulSoup(index_file.read_text(), features="lxml")
+    if not soup.find(id='custom-js'):
+        soup.head.append(os.environ['magia_MAGIA'])
+        index_file.write_text(str(soup))
     st.write(os.environ['magia_MAGIA'])
 
 
