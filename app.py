@@ -53,12 +53,14 @@ def main():
     
     # Insert the script in the head tag of the static template inside your virtual environement
     from bs4 import BeautifulSoup
-    
-    index_file = os.path.dirname(st.__file__)+'/static/index.html'
-    soup = BeautifulSoup(index_file.read_text(), features="lxml")
-    if not soup.find(id='custom-js'):
+    import pathlib2 as pathlib
+
+    index_path = pathlib.Path(st.__file__).parent / "static" / "index.html"
+    soup = BeautifulSoup(index_path.read_text(), features="lxml")
+    if len(re.findall('data-ad-client', index_path.read_text()))==0:
         soup.head.append(os.environ['magia_MAGIA'])
-        index_file.write_text(str(soup))
+        index_path.write_text(str(soup))
+
     st.write(os.environ['magia_MAGIA'])
 
 
