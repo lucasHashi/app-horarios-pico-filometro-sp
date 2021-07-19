@@ -18,12 +18,14 @@ def main():
 
     st.write('# Horarios de pico - Filômetro SP')
 
-    PAGINA_ATUAL = st.selectbox('Páginas / Perguntas', [
+    st.write('### Selecione uma pergunta:')
+
+    PAGINA_ATUAL = st.selectbox('', [
         'Início',
         'Qual é o melhor horario para ir no meu posto?',
         'Qual é o posto mais vazio na minha região?',
         'Os postos estão ficando sem vacinas?',
-        'Mel ou Petit',
+        'Mel ou Petit?',
         'Quem fez esse app?'
     ])
 
@@ -40,7 +42,7 @@ def main():
     elif PAGINA_ATUAL == 'Os postos estão ficando sem vacinas?':
         carregar_pagina_falta_de_vacinas(carrega_analises)
     
-    elif PAGINA_ATUAL == 'Mel ou Petit':
+    elif PAGINA_ATUAL == 'Mel ou Petit?':
         carregar_pagina_mel_ou_petit()
     
     elif PAGINA_ATUAL == 'Quem fez esse app?':
