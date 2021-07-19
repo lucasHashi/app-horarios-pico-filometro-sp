@@ -7,12 +7,22 @@ import plotly.graph_objs as go
 import carrega_analise_filometro
 
 import os
+import re
+import settings
 
 CAMINHO_BASE_PROJETO = os.getcwd()
 
 # PAGINA_ATUAL = 'inicio'
 
 def main():
+    index_file = os.path.dirname(st.__file__)+'/static/index.html'
+    with open(index_file, 'r') as f:
+        data = f.read()
+        if len(re.findall('data-ad-client=', data)) == 0:
+            with open(index_file, 'w') as ff:
+                new_index = re.sub('<head>', '<head>' + settings.adsense_code, data)
+                ff.write(new_index)
+
     st.set_page_config(
         page_title="Horarios de pico - Filometro",
         layout="wide"
@@ -96,7 +106,7 @@ def carregar_pagina_melhor_posto_por_regiao(carrega_analises):
         '22h - 24h'
     ])
 
-    st.write('## Mapa de calor da lotação média por horário, **melhores 10** postos para o horario das **{}**'.format(horario_escolhido))
+    st.write('## **Melhores 10** postos para o horario das **{}**'.format(horario_escolhido))
 
     fig_melhores_postos_por_regiao = carrega_analises.carregar_grafico_heatmap_melhores_postos_da_regiao_escolhida(regiao_escolhida, horario_escolhido)
 
@@ -113,7 +123,7 @@ def carregar_pagina_falta_de_vacinas(carrega_analises):
     # st.write(analise)
 
 
-    st.write('## Mapa de calor da falta de vacina ao longo do tempo')
+    st.write('## Dias com falta de vacina ao longo do tempo')
 
     heatmap_falta_vacina_por_categoria = carrega_analises.carregar_grafico_heatmap_falta_de_vacinas_por_categoria(categoria_escolhida)
 
