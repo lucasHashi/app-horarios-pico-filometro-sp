@@ -61,7 +61,7 @@ def main():
         soup.head.append(os.environ['magia_MAGIA'])
         index_path.write_text(str(soup))
 
-    st.write(os.environ['magia_MAGIA'])
+    st.write(os.environ['magia_MAGIA'][:20])
 
 
 
