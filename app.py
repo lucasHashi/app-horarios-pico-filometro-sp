@@ -29,6 +29,15 @@ def main():
         'Quem fez esse app?'
     ])
 
+    if not PAGINA_ATUAL == 'Como esse app funciona?':
+        if st.checkbox('Cores alternativas'):
+            carrega_analises.paleta_escolhida = 'alternativa'
+            carrega_analises.modo_daltonico = True
+        else:
+            carrega_analises.paleta_escolhida = 'base'
+            carrega_analises.modo_daltonico = False
+
+
 
     if PAGINA_ATUAL == 'Como esse app funciona?':
         carregar_pagina_inicial(carrega_analises)
@@ -179,7 +188,7 @@ def carregar_pagina_contato():
     st.write('Enfim, agora sim acabou, **obrigado por passar por aqui**.')
 
 
-@st.cache
+@st.cache(allow_output_mutation=True)
 def iniciar_classe_de_analise():
     carrega_analises = carrega_analise_filometro.carrega_analise_filometro()
 

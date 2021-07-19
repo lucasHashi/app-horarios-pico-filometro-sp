@@ -61,10 +61,27 @@ class carrega_analise_filometro(object):
         'posto volante': 'Média dos postos volante'
     }
 
+    PALETAS = {
+        'base': {
+            'baixo': '#1FA61B',
+            'medio': '#F9AE0D',
+            'alto': '#E21A1A'
+        },
+        'alternativa': {
+            'baixo': '#69D3F2',
+            'medio': '#EA418A',
+            'alto': '#E20019'
+        }
+    }
 
-    def __init__(self):
+
+    def __init__(self, modo_daltonico = False):
         self.df_dados_completo = self._carregar_dados_completos()
+        
+        self.modo_daltonico = modo_daltonico
 
+        self.paleta_escolhida = 'alternativa' if modo_daltonico else 'base'
+        
 
 
 
@@ -218,7 +235,11 @@ class carrega_analise_filometro(object):
             z = df_media_postos_escolhidos['situacao_pontuacao'],
             y = df_media_postos_escolhidos.index.get_level_values('titulo'),
             x = df_media_postos_escolhidos.index.get_level_values('horario_texto'),
-            colorscale = ['#1FA61B', '#F9AE0D', '#E21A1A'], # portland, balance, bluered
+            colorscale = [
+                self.PALETAS[self.paleta_escolhida]['baixo'],
+                self.PALETAS[self.paleta_escolhida]['medio'],
+                self.PALETAS[self.paleta_escolhida]['alto']
+            ]
         )
 
         layout = go.Layout(
@@ -242,7 +263,11 @@ class carrega_analise_filometro(object):
             z = df_heatmap_melhores_postos_na_regiao['situacao_pontuacao'],
             y = df_heatmap_melhores_postos_na_regiao.index.get_level_values('titulo'),
             x = df_heatmap_melhores_postos_na_regiao.index.get_level_values('horario_texto'),
-            colorscale = ['#1FA61B', '#F9AE0D', '#E21A1A'], # portland, balance, bluered
+            colorscale = [
+                self.PALETAS[self.paleta_escolhida]['baixo'],
+                self.PALETAS[self.paleta_escolhida]['medio'],
+                self.PALETAS[self.paleta_escolhida]['alto']
+            ]
         )
 
         layout = go.Layout(
@@ -265,7 +290,11 @@ class carrega_analise_filometro(object):
             z = df_heatmap_piores_postos_na_regiao['situacao_pontuacao'],
             y = df_heatmap_piores_postos_na_regiao.index.get_level_values('titulo'),
             x = df_heatmap_piores_postos_na_regiao.index.get_level_values('horario_texto'),
-            colorscale = ['#1FA61B', '#F9AE0D', '#E21A1A'], # portland, balance, bluered
+            colorscale = [
+                self.PALETAS[self.paleta_escolhida]['baixo'],
+                self.PALETAS[self.paleta_escolhida]['medio'],
+                self.PALETAS[self.paleta_escolhida]['alto']
+            ]
         )
 
         layout = go.Layout(
@@ -305,7 +334,10 @@ class carrega_analise_filometro(object):
             z = df_falta_de_vacina_media['sem_vacina'],
             y = df_falta_de_vacina_media['titulo'],
             x = df_falta_de_vacina_media['data_atualizacao'],
-            colorscale = ['#1FA61B', '#E21A1A'], # portland, balance, bluered
+            colorscale = [
+                self.PALETAS[self.paleta_escolhida]['baixo'],
+                self.PALETAS[self.paleta_escolhida]['alto']
+            ]
         )
 
         layout = go.Layout(
