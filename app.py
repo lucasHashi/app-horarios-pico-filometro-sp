@@ -21,7 +21,7 @@ def main():
     st.write('### Selecione uma pergunta:')
 
     PAGINA_ATUAL = st.selectbox('', [
-        'Início',
+        'Como esse app funciona?',
         'Qual é o melhor horario para ir no meu posto?',
         'Qual é o posto mais vazio na minha região?',
         'Os postos estão ficando sem vacinas?',
@@ -30,7 +30,7 @@ def main():
     ])
 
 
-    if PAGINA_ATUAL == 'Início':
+    if PAGINA_ATUAL == 'Como esse app funciona?':
         carregar_pagina_inicial(carrega_analises)
 
     elif PAGINA_ATUAL == 'Qual é o melhor horario para ir no meu posto?':
@@ -58,13 +58,13 @@ def carregar_pagina_inicial(carrega_analises):
     st.write('### Ultima atualização dos dados: **{}**'.format(data_da_ultima_atualizacao))
 
 
-    st.write('## De olho na fila ou Filômetro')
+    st.write('## De olho na fila / Filômetro')
     st.write('A prefeitura de SP disponibilizou o site "De olho na fila", que atualizar a cada 2 horas a situação da fila em cada posto de vacinação de Covid-19 na cidade.')
     st.write('[De olho na fila](https://deolhonafila.prefeitura.sp.gov.br/)')
     st.write('Fui coletando esses dados horários e juntei aqui pra ajudar as pessoas escolherem o posto mais vazio.')
 
 
-    st.write('## O que os números dos gráficos significam')
+    st.write('## O que os gráficos significam')
 
     st.write('As lotações dos postos foram enumeradas como na imagem, os valores dos gráficos são as médias dessas lotações')
 
