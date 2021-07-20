@@ -81,12 +81,25 @@ class carrega_analise_filometro(object):
         self.modo_daltonico = modo_daltonico
 
         self.paleta_escolhida = 'alternativa' if modo_daltonico else 'base'
-
+        
 
 
 
     def _carregar_dados_completos(self):
         df_dados_completo = pd.read_pickle('./dados_mais_recentes/dados_consolidados.pickle')
+
+        df_dados_completo['data_atualizacao'] = pd.to_datetime(df_dados_completo['data_atualizacao'], format='%d/%m/%Y', errors='coerce')
+
+        df_dados_completo['horario_atualizacao'] = pd.to_datetime(df_dados_completo['horario_atualizacao'], format='%H:%M', errors='coerce')
+        df_dados_completo['horario_aproximado'] = pd.to_datetime(df_dados_completo['horario_aproximado'], format='%H:%M', errors='coerce')
+
+        df_dados_completo['situacao_pontuacao'] = df_dados_completo['situacao'].apply(lambda situacao: self.PONTUACAO_POR_SITUACAO[situacao])
+
+        df_dados_completo['horario_aproximado_par'] = df_dados_completo['horario_aproximado'].apply(lambda horario: horario if horario.hour % 2 == 0 else horario - timedelta(hours=1))
+
+        df_dados_completo['horario_texto'] = df_dados_completo['horario_aproximado_par'].apply(lambda horario: self.TEXTOS_HORARIOS[horario.hour])
+
+        df_dados_completo['sem_vacina'] = df_dados_completo['situacao'].apply(lambda situacao: self.PONTUACAO_POR_FALTA_DE_VACINA[situacao])
 
         return df_dados_completo
     
@@ -155,7 +168,6 @@ class carrega_analise_filometro(object):
 
     def _carregar_media_geral(self):
         """Calcula a media geral da pontuacao dos postos em specifito
-
         Returns:
             DataFrame: df da media de pontuacao
         """
@@ -178,7 +190,9 @@ class carrega_analise_filometro(object):
         df_postos_escolhidos_categoria.rename(index = self.TEXTOS_DAS_MEDIAS_POR_CATEGORIAS, inplace=True)
 
         return df_postos_escolhidos_categoria
-    
+
+
+
     def _carregar_melhores_postos_por_regiao_e_horario(self, quantidade_postos, regiao_escolhida, horario_escolhido):
         # Filtra os postos dessa regiao e apenas o horario em questao
         df_regiao_escolhida = self.df_dados_completo[
@@ -417,10 +431,6 @@ class carrega_analise_filometro(object):
             lista_quotes_postos.append(quote_analise_posto)
 
         return lista_quotes_postos
-    
-    def analise_final_falta_de_vacina_por_categoria(self, categoria_escolhida):
-        pass
-
 
 
 if __name__ == '__main__':
