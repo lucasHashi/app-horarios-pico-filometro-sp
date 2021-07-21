@@ -1,3 +1,6 @@
+import pandas as pd
+pd.options.mode.chained_assignment = None
+
 import streamlit as st
 import streamlit.components.v1 as components
 import PIL
@@ -9,6 +12,7 @@ import pickle
 
 CAMINHO_BASE_PROJETO = os.getcwd()
 
+PAGINA_ATUAL = 'Como esse app funciona?'
 
 def main():
     st.set_page_config(
@@ -55,24 +59,86 @@ def main():
         carregar_pagina_contato()
 
 
+def main2():
+    st.set_page_config(
+        page_title="Horarios de pico - Filômetro",
+        layout="wide"
+    )
+
+    PAGINA_ATUAL = cache_pagina_atual()
+
+    st.title('Horarios de pico - Filômetro SP')
+
+    st.write('## Selecione uma pergunta:')
+
+    # Botoes bem aparentes para selecionar onde ir
+    # Cada um altera um valor em cache para o codigo da pagina
+    if st.button('Como esse app funciona?'):
+        PAGINA_ATUAL['pagina'] = 'Como esse app funciona?'
+
+    if st.button('Qual é o melhor horario para ir no meu posto?'):
+        PAGINA_ATUAL['pagina'] = 'Qual é o melhor horario para ir no meu posto?'
+
+    if st.button('Qual é o posto mais vazio na minha região?'):
+        PAGINA_ATUAL['pagina'] = 'Qual é o posto mais vazio na minha região?'
+
+    if st.button('Os postos estão ficando sem vacinas?'):
+        PAGINA_ATUAL['pagina'] = 'Os postos estão ficando sem vacinas?'
+
+    # if st.button('Mel ou Petit?'):
+    #     PAGINA_ATUAL['pagina'] = 'Mel ou Petit?'
+
+    if st.button('Quem fez esse app?'):
+        PAGINA_ATUAL['pagina'] = 'Quem fez esse app?'
+
+
+    # Da a opcao de cores alternativas apenas para as paginas com graficos
+    if not PAGINA_ATUAL['pagina'] in ['Como esse app funciona?', 'Mel ou Petit?', 'Quem fez esse app?']:
+        st.write('## Escala de cores')
+        if st.checkbox('Cores alternativas'):
+            paleta_escolhida = 'alternativa'
+        else:
+            paleta_escolhida = 'base'
+
+
+    # Carrega o resto da pagina, dependendo da pegunta escolhida
+    if PAGINA_ATUAL['pagina'] == 'Como esse app funciona?':
+        carregar_pagina_inicial()
+
+    elif PAGINA_ATUAL['pagina'] == 'Qual é o melhor horario para ir no meu posto?':
+        carregar_pagina_melhor_horario_por_posto(paleta_escolhida)
+
+    elif PAGINA_ATUAL['pagina'] == 'Qual é o posto mais vazio na minha região?':
+        carregar_pagina_melhor_posto_por_regiao(paleta_escolhida)
+    
+    elif PAGINA_ATUAL['pagina'] == 'Os postos estão ficando sem vacinas?':
+        carregar_pagina_falta_de_vacinas(paleta_escolhida)
+    
+    # elif PAGINA_ATUAL['pagina'] == 'Mel ou Petit?':
+    #     carregar_pagina_mel_ou_petit()
+    
+    elif PAGINA_ATUAL['pagina'] == 'Quem fez esse app?':
+        carregar_pagina_contato()
+
 
 def carregar_pagina_inicial():
-    st.write('### Ultima atualização dos dados: **19/07/2021**')
+    st.markdown('---')
+    st.write('#### Ultima atualização dos dados: **19/07/2021**')
 
-    st.write('## De olho na fila / Filômetro')
+    st.write('# De olho na fila / Filômetro')
     st.write('A Prefeitura de SP disponibilizou o site "De olho na fila", que atualizar a cada 2 horas a situação da fila em cada posto de vacinação de Covid-19 na cidade.')
     st.write('[De olho na fila](https://deolhonafila.prefeitura.sp.gov.br/)')
     st.write('Fui coletando esses dados horários e juntei aqui para ajudar as pessoas a escolherem o posto mais vazio.')
 
 
-    st.write('## O que os gráficos significam')
+    st.write('# O que os gráficos significam')
 
     st.write('As lotações dos postos foram enumeradas como na imagem, os valores dos gráficos são as médias dessas lotações')
 
     img_descricao = PIL.Image.open(os.path.join(CAMINHO_BASE_PROJETO, 'imagens', 'imagem_descricao_valores.jpg'))
     st.image(img_descricao)
 
-    st.write('## Me ajude com a hospedagem desse site')
+    st.write('# Me ajude com a hospedagem desse site')
     st.write('Se achar esse site útil, tem alguns trocados que não fariam falta e gostaria de ajudar pra esse site não cair ou falhar muito, considere manda um pix.')
     st.write('Nesse momento estou custeando o servidor por conta, mas só posso continuar até certo tempo.')
 
@@ -127,7 +193,7 @@ def carregar_pagina_melhor_posto_por_regiao(paleta_escolhida):
     st.plotly_chart(fig_melhores_postos_por_regiao, True)
 
 
-    st.write('## **Piores 5** postos')
+    st.write('## **Piores 5** postos para o horario das **{}**'.format(horario_escolhido))
 
     st.plotly_chart(fig_piores_postos_por_regiao, True)
 
@@ -142,13 +208,6 @@ def carregar_pagina_falta_de_vacinas(paleta_escolhida):
     heatmap_falta_vacina_por_categoria = carrega_dados_otimizados.carregar_grafico_heatmap_falta_de_vacinas_por_categoria(paleta_escolhida, categoria_escolhida)
 
     st.plotly_chart(heatmap_falta_vacina_por_categoria, True)
-
-
-    # st.write('## Quantidade de postos com falta de vacina ao longo do tempo')
-
-    # scatter_falta_de_vacina_soma_dias = carrega_dados_otimizados.carregar_grafico_scatter_falta_de_vacinas_por_categoria()
-
-    # st.plotly_chart(scatter_falta_de_vacina_soma_dias, True)
 
 # def carregar_pagina_mel_ou_petit():
 #     components.iframe('https://docs.google.com/forms/d/e/1FAIpQLSdy1lI52ubQ0Gs0qcdy-Q-G3h_JtFDBTtLRWHzfQ3mHCHnbiQ/viewform?embedded=true', width=640, height=900)
@@ -176,5 +235,14 @@ def carregar_pagina_contato():
     st.write('Enfim, **obrigado por passar por aqui**.')
 
 
+
+
+@st.cache(suppress_st_warning=True, allow_output_mutation=True)
+def cache_pagina_atual():
+    return {'pagina': 'Como esse app funciona?'}
+
+
 if __name__ == '__main__':
-    main()
+    # main()
+    
+    main2()
