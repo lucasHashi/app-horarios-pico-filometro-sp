@@ -55,9 +55,60 @@ def main():
         carregar_pagina_contato()
 
 
+def main2():
+    st.set_page_config(
+        page_title="Horarios de pico - Filômetro",
+        layout="wide"
+    )
+
+    st.title('Horarios de pico - Filômetro SP')
+
+    st.write('## Selecione uma pergunta:')
+
+    if st.button('Como esse app funciona?'):
+        alterar_pagina_atual('Como esse app funciona?')
+    if st.button('Qual é o melhor horario para ir no meu posto?'):
+        alterar_pagina_atual('Qual é o melhor horario para ir no meu posto?')
+    if st.button('Qual é o posto mais vazio na minha região?'):
+        alterar_pagina_atual('Qual é o posto mais vazio na minha região?')
+    if st.button('Os postos estão ficando sem vacinas?'):
+        alterar_pagina_atual('Os postos estão ficando sem vacinas?')
+    if st.button('Quem fez esse app?'):
+        alterar_pagina_atual('Quem fez esse app?')
+
+
+    PAGINA_ATUAL = ler_pagina_atual()
+
+    if not PAGINA_ATUAL in ['Como esse app funciona?', 'Quem fez esse app?']:
+        st.write('## Escala de cores')
+        if st.checkbox('Cores alternativas'):
+            paleta_escolhida = 'alternativa'
+        else:
+            paleta_escolhida = 'base'
+    
+    
+    if PAGINA_ATUAL == 'Como esse app funciona?':
+        carregar_pagina_inicial()
+
+    elif PAGINA_ATUAL == 'Qual é o melhor horario para ir no meu posto?':
+        carregar_pagina_melhor_horario_por_posto(paleta_escolhida)
+
+    elif PAGINA_ATUAL == 'Qual é o posto mais vazio na minha região?':
+        carregar_pagina_melhor_posto_por_regiao(paleta_escolhida)
+    
+    elif PAGINA_ATUAL == 'Os postos estão ficando sem vacinas?':
+        carregar_pagina_falta_de_vacinas(paleta_escolhida)
+    
+    # elif PAGINA_ATUAL == 'Mel ou Petit?':
+    #     carregar_pagina_mel_ou_petit()
+    
+    elif PAGINA_ATUAL == 'Quem fez esse app?':
+        carregar_pagina_contato()
+
+
 
 def carregar_pagina_inicial():
-    st.write('### Ultima atualização dos dados: **19/07/2021**')
+    st.write('#### Ultima atualização dos dados: **19/07/2021**')
 
     st.write('## De olho na fila / Filômetro')
     st.write('A Prefeitura de SP disponibilizou o site "De olho na fila", que atualizar a cada 2 horas a situação da fila em cada posto de vacinação de Covid-19 na cidade.')
@@ -127,7 +178,7 @@ def carregar_pagina_melhor_posto_por_regiao(paleta_escolhida):
     st.plotly_chart(fig_melhores_postos_por_regiao, True)
 
 
-    st.write('## **Piores 5** postos')
+    st.write('## **Piores 5** postos para o horario das **{}**'.format(horario_escolhido))
 
     st.plotly_chart(fig_piores_postos_por_regiao, True)
 
@@ -143,12 +194,6 @@ def carregar_pagina_falta_de_vacinas(paleta_escolhida):
 
     st.plotly_chart(heatmap_falta_vacina_por_categoria, True)
 
-
-    # st.write('## Quantidade de postos com falta de vacina ao longo do tempo')
-
-    # scatter_falta_de_vacina_soma_dias = carrega_dados_otimizados.carregar_grafico_scatter_falta_de_vacinas_por_categoria()
-
-    # st.plotly_chart(scatter_falta_de_vacina_soma_dias, True)
 
 # def carregar_pagina_mel_ou_petit():
 #     components.iframe('https://docs.google.com/forms/d/e/1FAIpQLSdy1lI52ubQ0Gs0qcdy-Q-G3h_JtFDBTtLRWHzfQ3mHCHnbiQ/viewform?embedded=true', width=640, height=900)
@@ -176,5 +221,17 @@ def carregar_pagina_contato():
     st.write('Enfim, **obrigado por passar por aqui**.')
 
 
+
+def ler_pagina_atual():
+    pagina_atual = pickle.load(open(os.path.join(CAMINHO_BASE_PROJETO, 'pagina_atual.pickle'), 'rb'))
+
+    return pagina_atual['pagina_atual']
+
+def alterar_pagina_atual(pagina_nova):
+    pickle.dump({'pagina_atual': pagina_nova}, open(os.path.join(CAMINHO_BASE_PROJETO, 'pagina_atual.pickle'), 'wb'))
+
 if __name__ == '__main__':
-    main()
+    if not os.path.isfile(os.path.join(CAMINHO_BASE_PROJETO, 'pagina_atual.pickle')):
+        alterar_pagina_atual('Como esse app funciona?')
+    
+    main2()
