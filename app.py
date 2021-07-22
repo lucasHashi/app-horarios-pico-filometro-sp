@@ -54,6 +54,7 @@ def main():
     
     # elif PAGINA_ATUAL == 'Mel ou Petit?':
     #     carregar_pagina_mel_ou_petit()
+    # TESTE, ALTERACAO SEM IMPACTO
     
     elif PAGINA_ATUAL == 'Quem fez esse app?':
         carregar_pagina_contato()
