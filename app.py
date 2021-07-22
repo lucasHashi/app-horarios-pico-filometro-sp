@@ -165,7 +165,7 @@ def carregar_pagina_melhor_horario_por_posto(paleta_escolhida):
 
         fig_heatmap_media_postos_escolhidos = carrega_dados_otimizados.carregar_grafico_heatmap_pontuacao_dos_postos_escolhidos(paleta_escolhida, postos_escolhidos)
 
-        st.plotly_chart(fig_heatmap_media_postos_escolhidos, True)
+        st.plotly_chart(fig_heatmap_media_postos_escolhidos, True, config={'staticPlot': True})
 
 
         st.write('## Resumo por posto (do melhor para o pior)')
@@ -196,12 +196,12 @@ def carregar_pagina_melhor_posto_por_regiao(paleta_escolhida):
 
     st.write('## **Melhores 10** postos para o horário das **{}**'.format(horario_escolhido))
 
-    st.plotly_chart(fig_melhores_postos_por_regiao, True)
+    st.plotly_chart(fig_melhores_postos_por_regiao, True, config={'staticPlot': True})
 
 
     st.write('## **Piores 5** postos para o horário das **{}**'.format(horario_escolhido))
 
-    st.plotly_chart(fig_piores_postos_por_regiao, True)
+    st.plotly_chart(fig_piores_postos_por_regiao, True, config={'staticPlot': True})
 
 def carregar_pagina_falta_de_vacinas(paleta_escolhida):
     # st.title('Os postos estão ficando sem vacinas?')
@@ -215,7 +215,7 @@ def carregar_pagina_falta_de_vacinas(paleta_escolhida):
 
     heatmap_falta_vacina_por_categoria = carrega_dados_otimizados.carregar_grafico_heatmap_falta_de_vacinas_por_categoria(paleta_escolhida, categoria_escolhida)
 
-    st.plotly_chart(heatmap_falta_vacina_por_categoria, True)
+    st.plotly_chart(heatmap_falta_vacina_por_categoria, True, config={'staticPlot': True})
 
 # def carregar_pagina_mel_ou_petit():
 #     components.iframe('https://docs.google.com/forms/d/e/1FAIpQLSdy1lI52ubQ0Gs0qcdy-Q-G3h_JtFDBTtLRWHzfQ3mHCHnbiQ/viewform?embedded=true', width=640, height=900)

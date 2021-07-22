@@ -61,86 +61,6 @@ def carregar_falta_vacina_preenchido():
 
 
 
-
-
-def _carregar_df_melhores_postos_por_regiao_escolhida(self, quantidade_postos, regiao_escolhida, horario_escolhido):
-    melhores_postos = self._carregar_melhores_postos_por_regiao_e_horario(quantidade_postos, regiao_escolhida, horario_escolhido)
-
-    # Filtra os dados completos dos 10 melhores no horario especificado
-    df_melhores_postos_da_regiao = self.df_dados_completo[
-        (self.df_dados_completo['titulo'].isin(melhores_postos)) &
-        (self.df_dados_completo['situacao_pontuacao'] >= 0)
-    ]
-
-    df_melhores_postos_da_regiao = df_melhores_postos_da_regiao.groupby(['titulo', 'horario_texto']).mean()
-
-    df_posto_escolhido_categoria = self._carregar_media_categorias_escolhidas([regiao_escolhida])
-    df_media_geral = self._carregar_media_geral()
-
-    df_heatmap_melhores_postos_na_regiao = pd.concat([df_melhores_postos_da_regiao, df_posto_escolhido_categoria, df_media_geral])
-
-    return df_heatmap_melhores_postos_na_regiao
-
-def _carregar_df_piores_postos_por_regiao_escolhida(self, quantidade_postos, regiao_escolhida, horario_escolhido):
-    piores_postos = self._carregar_piores_postos_por_regiao_e_horario(quantidade_postos, regiao_escolhida, horario_escolhido)
-
-    # Filtra os dados completos dos 10 melhores no horario especificado
-    df_piores_postos_da_regiao = self.df_dados_completo[
-        (self.df_dados_completo['titulo'].isin(piores_postos)) &
-        (self.df_dados_completo['situacao_pontuacao'] >= 0)
-    ]
-
-    df_piores_postos_da_regiao = df_piores_postos_da_regiao.groupby(['titulo', 'horario_texto']).mean()
-
-    #df_posto_escolhido_categoria = self._carregar_media_categorias_escolhidas([regiao_escolhida])
-    #df_media_geral = self._carregar_media_geral()
-
-    #df_heatmap_piores_postos_na_regiao = pd.concat([df_piores_postos_da_regiao, df_posto_escolhido_categoria, df_media_geral])
-    df_heatmap_piores_postos_na_regiao = df_piores_postos_da_regiao.copy()
-
-    return df_heatmap_piores_postos_na_regiao
-
-
-
-
-
-
-def _carregar_melhores_postos_por_regiao_e_horario(self, quantidade_postos, regiao_escolhida, horario_escolhido):
-    # Filtra os postos dessa regiao e apenas o horario em questao
-    df_regiao_escolhida = self.df_dados_completo[
-        (self.df_dados_completo['categoria'] == regiao_escolhida) &
-        (self.df_dados_completo['situacao_pontuacao'] >= 0) &
-        (self.df_dados_completo['horario_texto'] == horario_escolhido)
-    ]
-
-    # Calcula a media e pega os N melhores
-    melhores_postos = df_regiao_escolhida.groupby(['titulo']).mean()
-    melhores_postos.sort_values('situacao_pontuacao', inplace=True)
-    melhores_postos = melhores_postos.head(quantidade_postos)
-    melhores_postos = melhores_postos.index.get_level_values('titulo')
-    melhores_postos = list(melhores_postos)
-
-    return melhores_postos
-
-def _carregar_piores_postos_por_regiao_e_horario(self, quantidade_postos, regiao_escolhida, horario_escolhido):
-    # Filtra os postos dessa regiao e apenas o horario em questao
-    df_regiao_escolhida = self.df_dados_completo[
-        (self.df_dados_completo['categoria'] == regiao_escolhida) &
-        (self.df_dados_completo['situacao_pontuacao'] >= 0) &
-        (self.df_dados_completo['horario_texto'] == horario_escolhido)
-    ]
-
-    # Calcula a media e pega os N melhores
-    piores_postos = df_regiao_escolhida.groupby(['titulo']).mean()
-    piores_postos.sort_values('situacao_pontuacao', inplace=True)
-    piores_postos = piores_postos.tail(quantidade_postos)
-    piores_postos = piores_postos.index.get_level_values('titulo')
-    piores_postos = list(piores_postos)
-
-    return piores_postos
-
-
-
 def carregar_grafico_heatmap_pontuacao_dos_postos_escolhidos(paleta_escolhida, postos_escolhidos):
     df_media_postos_escolhidos = carregar_media_todos_postos()
 
@@ -179,6 +99,7 @@ def carregar_grafico_heatmap_pontuacao_dos_postos_escolhidos(paleta_escolhida, p
             'categoryorder': 'category ascending'
         }
     )
+    
 
     fig = go.Figure(
         data = [heatmap_pontuacao_posto_escolhido],
@@ -227,6 +148,8 @@ def carregar_grafico_heatmap_melhores_e_piores_postos_da_regiao_escolhida(paleta
             'categoryorder': 'category ascending'
         }
     )
+
+    
 
     fig_melhores = go.Figure(
         data = [heatmap_pontuacao_melhores_postos_na_regiao],
@@ -280,6 +203,8 @@ def carregar_grafico_heatmap_falta_de_vacinas_por_categoria(paleta_escolhida, ca
     layout = go.Layout(
         height = 800
     )
+
+    
 
     fig = go.Figure(
         data = [heatmap_falta_de_vacina],
