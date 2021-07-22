@@ -7,6 +7,7 @@ import PIL
 
 import carrega_analise_filometro_otimizado as carrega_dados_otimizados
 
+import sys
 import os
 import pickle
 
