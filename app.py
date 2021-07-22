@@ -218,6 +218,7 @@ def carregar_pagina_falta_de_vacinas(paleta_escolhida):
     st.plotly_chart(heatmap_falta_vacina_por_categoria, True)
 
 # def carregar_pagina_mel_ou_petit():
+#     st.title('Mel ou Petit?')
 #     components.iframe('https://docs.google.com/forms/d/e/1FAIpQLSdy1lI52ubQ0Gs0qcdy-Q-G3h_JtFDBTtLRWHzfQ3mHCHnbiQ/viewform?embedded=true', width=640, height=900)
 
 def carregar_pagina_contato():
