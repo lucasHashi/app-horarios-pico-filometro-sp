@@ -123,7 +123,7 @@ def main2():
 
 def carregar_pagina_inicial():
     st.markdown('---')
-    st.write('#### Ultima atualização dos dados: **19/07/2021**')
+    st.write('#### Ultima atualização dos dados: **22/07/2021**')
 
     st.write('# De olho na fila / Filômetro')
     st.write('A Prefeitura de SP disponibilizou o site **"De olho na fila"**, que **atualiza a cada 2 horas a situação da fila** em cada posto de vacinação de Covid-19 na cidade.')
