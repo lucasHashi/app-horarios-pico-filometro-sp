@@ -20,7 +20,7 @@ def main():
         layout="wide"
     )
 
-    st.write('# Horários de pico - Filômetro SP')
+    st.write('# ')
 
     st.write('### Selecione uma pergunta:')
 
@@ -150,14 +150,14 @@ def carregar_pagina_inicial():
 
 def carregar_pagina_melhor_horario_por_posto(paleta_escolhida):
     # st.title('Qual é o melhor horário para ir no meu posto?')
-    st.title('Veja o melhor horário para ir em cada local de vacinação')
+    st.title('Veja o melhor horário para ir em cada posto de vacinação')
 
     with open(os.path.join(CAMINHO_BASE_PROJETO, 'dados_mais_recentes', 'lista_completa_postos.pickle'), 'rb') as f:
         lista_completa_postos = pickle.load(f)
     
     lista_completa_postos.sort()
 
-    st.write('## Selecione um ou mais locais de vacinação:')
+    st.write('## Selecione um ou mais postos de vacinação:')
     postos_escolhidos = st.multiselect('', lista_completa_postos)
 
     if postos_escolhidos:
@@ -177,7 +177,7 @@ def carregar_pagina_melhor_horario_por_posto(paleta_escolhida):
 
 def carregar_pagina_melhor_posto_por_regiao(paleta_escolhida):
     # st.title('Qual é o posto mais vazio na minha região?')
-    st.title('Veja o local mais vazio da sua região')
+    st.title('Veja o posto mais vazio da sua região')
 
     st.write('## Selecione a sua região:')
     regiao_escolhida = st.selectbox('', ['centro', 'leste', 'norte', 'oeste', 'sul'])
