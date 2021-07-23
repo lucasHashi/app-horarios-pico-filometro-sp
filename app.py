@@ -16,7 +16,7 @@ PAGINA_ATUAL = 'Como esse app funciona?'
 
 def main():
     st.set_page_config(
-        page_title="Horários de pico - Filômetro",
+        page_title="Horários de pico da vacinação 💉 site para te ajudar a escolher o horário mais vazio",
         layout="wide"
     )
 
