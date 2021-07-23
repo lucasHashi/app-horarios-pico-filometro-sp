@@ -16,58 +16,13 @@ PAGINA_ATUAL = 'Como esse app funciona?'
 
 def main():
     st.set_page_config(
-        page_title="Horários de pico da vacinação 💉 site para te ajudar a escolher o horário mais vazio",
-        layout="wide"
-    )
-
-    st.write('# ')
-
-    st.write('### Selecione uma pergunta:')
-
-    PAGINA_ATUAL = st.selectbox('', [
-        'Como esse app funciona?',
-        'Qual é o melhor horário para ir no meu posto?',
-        'Qual é o posto mais vazio na minha região?',
-        'Os postos estão ficando sem vacinas?',
-        # 'Mel ou Petit?',
-        'Quem fez esse app?'
-    ])
-
-    if not PAGINA_ATUAL in ['Como esse app funciona?', 'Mel ou Petit?', 'Quem fez esse app?']:
-        if st.checkbox('Cores alternativas'):
-            paleta_escolhida = 'alternativa'
-        else:
-            paleta_escolhida = 'base'
-
-
-    if PAGINA_ATUAL == 'Como esse app funciona?':
-        carregar_pagina_inicial()
-
-    elif PAGINA_ATUAL == 'Qual é o melhor horário para ir no meu posto?':
-        carregar_pagina_melhor_horario_por_posto(paleta_escolhida)
-
-    elif PAGINA_ATUAL == 'Qual é o posto mais vazio na minha região?':
-        carregar_pagina_melhor_posto_por_regiao(paleta_escolhida)
-    
-    elif PAGINA_ATUAL == 'Os postos estão ficando sem vacinas?':
-        carregar_pagina_falta_de_vacinas(paleta_escolhida)
-    
-    # elif PAGINA_ATUAL == 'Mel ou Petit?':
-    #     carregar_pagina_mel_ou_petit()
-    
-    elif PAGINA_ATUAL == 'Quem fez esse app?':
-        carregar_pagina_contato()
-
-
-def main2():
-    st.set_page_config(
         page_title="Horários de pico - Filômetro",
         layout="wide"
     )
 
     PAGINA_ATUAL = cache_pagina_atual()
 
-    st.title('Horários de pico - Filômetro SP')
+    st.title('Horários de pico da vacinação 💉 site para te ajudar a escolher o horário mais vazio')
 
     st.write('## Selecione uma pergunta:')
 
