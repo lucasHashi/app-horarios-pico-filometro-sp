@@ -206,6 +206,4 @@ def cache_pagina_atual():
 
 
 if __name__ == '__main__':
-    # main()
-    
-    main2()
+    main()
